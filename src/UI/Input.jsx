@@ -22,7 +22,7 @@ export default function Inputs(props) {
             noValidate
             autoComplete="off"
         >
-            <Input placeholder="Create New Project" inputProps={ariaLabel} onKeyPress={createNote}/>
+            <Input placeholder="Start New Project" inputProps={ariaLabel} onKeyPress={createNote}/>
         </Box>
     );
 }

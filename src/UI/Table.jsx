@@ -8,20 +8,21 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import MonetizationIcon from '@mui/icons-material/MonetizationOn';
 import Button from '@mui/material/Button';
 
 
 export default function BasicTable(props) {
 
-    const onNoteEdit = (e) => {
+    const onProjectEdit = (e) => {
         e.preventDefault()
-        props.onNoteEdit(e.target.value);
+        props.onProjectEdit(e.target.value);
     }
 
-    const onNoteDelete = (e) => {
+    const onProjectDelete = (e) => {
         e.preventDefault()
         console.log(e.target.value)
-        props.onNoteDelete(e.target.value);
+        props.onProjectDelete(e.target.value);
     }
 
     return (
@@ -31,6 +32,7 @@ export default function BasicTable(props) {
                     <TableRow>
                         <TableCell>Author</TableCell>
                         <TableCell>Project Name</TableCell>
+                        <TableCell>Progress</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
@@ -42,9 +44,11 @@ export default function BasicTable(props) {
                         >
                             <TableCell component="th" scope="row">{row.author}</TableCell>
                             <TableCell>{row.name}</TableCell>
+                            <TableCell>{row.raised} of {row.requested}</TableCell>
                             <TableCell align="right">
-                                <Button onClick={onNoteEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
-                                <Button onClick={onNoteDelete} value={row._id} variant="text"><DeleteOutlineIcon />Delete</Button>
+                                <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><MonetizationIcon/>Support</Button>
+                                <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
+                                <Button onClick={onProjectDelete} value={row._id} variant="text"><DeleteOutlineIcon/>Delete</Button>
                             </TableCell>
                         </TableRow>
                     ))}

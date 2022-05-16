@@ -18,8 +18,8 @@ function App() {
     const [text, setText] = useState('Sample name');
     const [access, setAccess] = useState(false);
 
-    const handleEditNote = async (noteId) => {
-        console.log('handleEditNote')
+    const handleEditProject = async (noteId) => {
+        console.log('handleEditProject')
         if (noteId) {
             setOpen(true);
             setNoteId(noteId);
@@ -37,7 +37,7 @@ function App() {
             : null
     );
 
-    const [notesList, toggleNotes] = useState(
+    const [projectsList, toggleProjects] = useState(
         false
     )
 
@@ -58,37 +58,37 @@ function App() {
 
         const data = await res.json();
         setLoginData(data);
-        toggleNotes(false);
+        toggleProjects(false);
         localStorage.setItem('loginData', JSON.stringify(data));
     };
     const handleLogout = () => {
         localStorage.removeItem('loginData');
         setLoginData(null);
-        toggleNotes(false);
+        toggleProjects(false);
     };
 
-    const handleGetAllNotes = async () => {
-        // if (!notesList) {
+    const handleGetAllProjects = async () => {
+        // if (!projectsList) {
             const res = await fetch('/api/get-all-projects')
             const result = await res.json().then(data => {return data})
-            toggleNotes(result)
+            toggleProjects(result)
         // } else {
-            // toggleNotes(false)
+            // toggleProjects(false)
         // }
     }
 
     const handleGetUserProjects = async () => {
-        // if (!notesList) {
+        // if (!projectsList) {
             const res = await fetch('/api/get-user-projects/'+loginData.googleId)
             const result = await res.json().then(data => {return data})
-            toggleNotes(result)
+            toggleProjects(result)
         // } else {
-            // toggleNotes(false)
+            // toggleProjects(false)
         // }
     }
 
-    const handleNewNote = async (name) => {
-        console.log('handleNewNote')
+    const handleNewProject = async (name) => {
+        console.log('handleNewProject')
         await fetch('/api/new-project', {
             method: 'POST',
             body: JSON.stringify({
@@ -166,7 +166,7 @@ function App() {
             {loginData ? (
                 <div>
                     <h1>Kickstart Your Projects</h1>
-                    <h3>You logged in as {loginData.email}</h3>
+                    <h3>You've logged in as {loginData.email} (googleId - {loginData.googleId})</h3>
                     <Dialog open={open} onClose={handleClose}>
                         <DialogTitle>Edit name</DialogTitle>
                         <DialogContent>
@@ -186,15 +186,15 @@ function App() {
                             <Button onClick={handleEdit}>Edit</Button>
                         </DialogActions>
                     </Dialog>
-                    <Input onNewNote={handleNewNote}/>
-                    <Button variant="outlined" onClick={handleGetAllNotes}>Browse All Projects</Button>
+                    <Input onNewNote={handleNewProject}/>
+                    <Button variant="outlined" onClick={handleGetAllProjects}>Browse All Projects</Button>
                     {/* {hasUserAccess('view_all') &&
-                        <Button disabled={!access} variant="outlined" onClick={handleGetAllNotes}>Get all notes</Button>
+                        <Button disabled={!access} variant="outlined" onClick={handleGetAllProjects}>Get all notes</Button>
                     } */}
                     <Button variant="outlined" onClick={handleGetUserProjects}>My Projects</Button>
-                    {notesList ? (
+                    {projectsList ? (
                         <div>
-                            <Table data={notesList} onNoteEdit={handleEditNote} onNoteDelete={handleDelete}/>
+                            <Table data={projectsList} onProjectEdit={handleEditProject} onProjectDelete={handleDelete}/>
                         </div>
                     ) : (
                         <div></div>

@@ -24,8 +24,8 @@ const updateUser = async (user) => {
     )
 }
 
-const newProject = async (user, name) => {
-    await projects.insertOne({author: user, name: name})
+const newProject = async (user, name, target) => {
+    await projects.insertOne({author: user, name: name, raised: 0, requested: target})
 }
 
 const getAllProjects = async() => {

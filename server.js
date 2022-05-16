@@ -27,7 +27,7 @@ app.post('/api/google-login', async (req, res) => {
 
 app.post('/api/new-project', async (req, res) => {
     const { user, name } = req.body;
-    await newProject(user, name)
+    await newProject(user, name, 100)
     res.json('created project')
 });
 
