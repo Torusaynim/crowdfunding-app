@@ -92,13 +92,16 @@ function App() {
         // }
     }
 
-    const handleNewProject = async (name) => {
+    const handleNewProject = async (name,sum) => {
         console.log('handleNewProject')
+    
+        console.log(sum);
         await fetch('/api/new-project', {
             method: 'POST',
             body: JSON.stringify({
                 user: loginData.googleId,
-                name: name
+                name: name,
+                sum: sum,
             }),
             headers: {
                 'Content-Type': 'application/json',
