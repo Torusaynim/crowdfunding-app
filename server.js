@@ -26,8 +26,8 @@ app.post('/api/google-login', async (req, res) => {
 });
 
 app.post('/api/new-project', async (req, res) => {
-    const { user, note } = req.body;
-    await newProject(user, note)
+    const { user, name } = req.body;
+    await newProject(user, name)
     res.json('created project')
 });
 
@@ -51,9 +51,9 @@ app.post('/api/delete-project', async(req, res) => {
 })
 
 app.post('/api/edit-project', async(req, res) => {
-    const { _id, note } = req.body;
-    console.log({ _id, note })
-    const edit_note = await editProject(_id, note)
+    const { _id, name } = req.body;
+    console.log({ _id, name })
+    const edit_note = await editProject(_id, name)
     res.json(edit_note)
 })
 

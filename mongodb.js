@@ -24,8 +24,8 @@ const updateUser = async (user) => {
     )
 }
 
-const newProject = async (user, note) => {
-    await projects.insertOne({author: user, note: note})
+const newProject = async (user, name) => {
+    await projects.insertOne({author: user, name: name})
 }
 
 const getAllProjects = async() => {
@@ -43,9 +43,9 @@ const deleteProject = async(_id) => {
     return res
 }
 
-const editProject = async(_id, anotherNote) => {
-    console.log(_id, anotherNote)
-    const res = await projects.updateOne({_id: ObjectId(_id)}, {$set: {"note": anotherNote}})
+const editProject = async(_id, anotherName) => {
+    console.log(_id, anotherName)
+    const res = await projects.updateOne({_id: ObjectId(_id)}, {$set: {"name": anotherName}})
 
     console.log(res)
 }

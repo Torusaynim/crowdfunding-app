@@ -15,7 +15,7 @@ import Dialog from "@mui/material/Dialog";
 function App() {
     const [open, setOpen] = useState(false);
     const [noteId, setNoteId] = useState(null);
-    const [text, setText] = useState('Sample note');
+    const [text, setText] = useState('Sample name');
     const [access, setAccess] = useState(false);
 
     const handleEditNote = async (noteId) => {
@@ -87,13 +87,13 @@ function App() {
         // }
     }
 
-    const handleNewNote = async (note) => {
+    const handleNewNote = async (name) => {
         console.log('handleNewNote')
         await fetch('/api/new-project', {
             method: 'POST',
             body: JSON.stringify({
                 user: loginData.googleId,
-                note: note
+                name: name
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ function App() {
             method: 'POST',
             body: JSON.stringify({
                 _id: noteId,
-                note: text
+                name: text
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -168,15 +168,15 @@ function App() {
                     <h1>Kickstart Your Projects</h1>
                     <h3>You logged in as {loginData.email}</h3>
                     <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>Edit note</DialogTitle>
+                        <DialogTitle>Edit name</DialogTitle>
                         <DialogContent>
                             <TextField
                                 onChange={handleChangeText}
                                 autoFocus
                                 margin="dense"
-                                id="note"
-                                label="Enter new note"
-                                type="note"
+                                id="name"
+                                label="Enter new name"
+                                type="name"
                                 fullWidth
                                 variant="standard"
                             />

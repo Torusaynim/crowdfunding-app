@@ -30,7 +30,7 @@ export default function BasicTable(props) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Author</TableCell>
-                        <TableCell>Required Summ</TableCell>
+                        <TableCell>Project Name</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
@@ -41,7 +41,7 @@ export default function BasicTable(props) {
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">{row.author}</TableCell>
-                            <TableCell>{row.note}</TableCell>
+                            <TableCell>{row.name}</TableCell>
                             <TableCell align="right">
                                 <Button onClick={onNoteEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
                                 <Button onClick={onNoteDelete} value={row._id} variant="text"><DeleteOutlineIcon />Delete</Button>
