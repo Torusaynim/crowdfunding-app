@@ -1,5 +1,4 @@
 import './App.css';
-import GoogleLogin from 'react-google-login';
 import { useState } from 'react';
 import Input from './UI/Input'
 import Button from '@mui/material/Button';
@@ -10,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 function App() {
@@ -42,17 +43,21 @@ function App() {
     )
 
     const handleFailure = (result) => {
-        alert(result);
+        console.log(window.location.href);
+        console.log(result);
     };
 
     const handleLogin = async (googleData) => {
+        console.log(googleData);
+
         const res = await fetch('/api/google-login', {
             method: 'POST',
             body: JSON.stringify({
-                token: googleData.tokenId,
+                token: googleData.credential,
             }),
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
         });
 
@@ -69,21 +74,21 @@ function App() {
 
     const handleGetAllProjects = async () => {
         // if (!projectsList) {
-            const res = await fetch('/api/get-all-projects')
-            const result = await res.json().then(data => {return data})
-            toggleProjects(result)
+        const res = await fetch('/api/get-all-projects')
+        const result = await res.json().then(data => { return data })
+        toggleProjects(result)
         // } else {
-            // toggleProjects(false)
+        // toggleProjects(false)
         // }
     }
 
     const handleGetUserProjects = async () => {
         // if (!projectsList) {
-            const res = await fetch('/api/get-user-projects/'+loginData.googleId)
-            const result = await res.json().then(data => {return data})
-            toggleProjects(result)
+        const res = await fetch('/api/get-user-projects/' + loginData.googleId)
+        const result = await res.json().then(data => { return data })
+        toggleProjects(result)
         // } else {
-            // toggleProjects(false)
+        // toggleProjects(false)
         // }
     }
 
@@ -133,6 +138,7 @@ function App() {
     };
 
     const handleChangeText = (e) => {
+
         setText(e.target.value)
     };
 
@@ -150,8 +156,8 @@ function App() {
     //     return result
     // }
 
-    const hasUserAccess = async(perm) => {
-        const res = await fetch('/api/get-user-permissions/'+loginData.googleId)
+    const hasUserAccess = async (perm) => {
+        const res = await fetch('/api/get-user-permissions/' + loginData.googleId)
         const result = await res.json()
         setPermission(result.permissions.some(e => e === perm))
     }
@@ -161,64 +167,73 @@ function App() {
     }
 
     return (
-    <div className="App">
-        <div>
-            {loginData ? (
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <div className="App">
                 <div>
-                    <h1>Kickstart Your Projects</h1>
-                    <h3>You've logged in as {loginData.email} (googleId - {loginData.googleId})</h3>
-                    <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>Edit name</DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                onChange={handleChangeText}
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Enter new name"
-                                type="name"
-                                fullWidth
-                                variant="standard"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>Cancel</Button>
-                            <Button onClick={handleEdit}>Edit</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Input onNewNote={handleNewProject}/>
-                    <Button variant="outlined" onClick={handleGetAllProjects}>Browse All Projects</Button>
-                    {/* {hasUserAccess('view_all') &&
+                    {loginData ? (
+                        <div>
+                            <h1>Kickstart Your Projects</h1>
+                            <h3>You've logged in as {loginData.email} (googleId - {loginData.googleId})</h3>
+                            <Dialog open={open} onClose={handleClose}>
+                                <DialogTitle>Edit name</DialogTitle>
+                                <DialogContent>
+                                    <TextField
+                                        onChange={handleChangeText}
+                                        autoFocus
+                                        margin="dense"
+                                        id="name"
+                                        label="Enter new name"
+                                        type="name"
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button onClick={handleEdit}>Edit</Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Input onNewNote={handleNewProject} />
+                            <Button variant="outlined" onClick={handleGetAllProjects}>Browse All Projects</Button>
+                            {/* {hasUserAccess('view_all') &&
                         <Button disabled={!access} variant="outlined" onClick={handleGetAllProjects}>Get all notes</Button>
                     } */}
-                    <Button variant="outlined" onClick={handleGetUserProjects}>My Projects</Button>
-                    {projectsList ? (
-                        <div>
-                            <Table data={projectsList} onProjectEdit={handleEditProject} onProjectDelete={handleDelete}/>
+                            <Button variant="outlined" onClick={handleGetUserProjects}>My Projects</Button>
+                            {projectsList ? (
+                                <div>
+                                    <Table data={projectsList} onProjectEdit={handleEditProject} onProjectDelete={handleDelete} />
+                                </div>
+                            ) : (
+                                <div></div>
+                            )}
+                            <br /><br /><br />
+                            <button onClick={handleLogout} className="ggl-btn">
+                                <span style={{ fontWeight: 500, padding: "10px" }}>Logout</span>
+                            </button>
                         </div>
                     ) : (
-                        <div></div>
+                        <div>
+                            <h1>Login Page</h1>
+                                <GoogleLogin
+                                    onSuccess={handleLogin}
+                                    onError={() => {
+                                        console.log('Login Failed');
+                                    }}
+                                />
+                                {/* <GoogleLogin
+                                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                                    buttonText="Log in with Google"
+                                    onSuccess={handleLogin}
+                                    onFailure={handleFailure}
+                                    cookiePolicy={'single_host_origin'}
+                                /> */}
+                        </div>
                     )}
-                    <br/><br/><br/>
-                    <button onClick={handleLogout} className="ggl-btn">
-                        <span style={{fontWeight: 500, padding: "10px"}}>Logout</span>
-                    </button>
                 </div>
-            ) : (
-                <div>
-                <h1>Login Page</h1>
-                <GoogleLogin
-                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                    buttonText="Log in with Google"
-                    onSuccess={handleLogin}
-                    onFailure={handleFailure}
-                    cookiePolicy={'single_host_origin'}
-                />
-                </div>
-            )}
-        </div>
-    </div>
+            </div>
+        </GoogleOAuthProvider>
     );
+
 }
 
 export default App;
