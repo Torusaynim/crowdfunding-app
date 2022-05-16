@@ -17,6 +17,8 @@ function App() {
     const [open, setOpen] = useState(false);
     const [noteId, setNoteId] = useState(null);
     const [text, setText] = useState('Sample name');
+    const [sumGET, setSum] = useState('Sample sum');
+
     const [access, setAccess] = useState(false);
 
     const handleEditProject = async (noteId) => {
@@ -109,6 +111,7 @@ function App() {
         });
         await handleGetUserProjects(loginData.googleId);
     };
+  
 
     const handleDelete = async (noteId) => {
         console.log('handleDelete')
@@ -125,11 +128,13 @@ function App() {
     };
 
     const handleEdit = async () => {
+     
         await fetch('/api/edit-project', {
             method: 'POST',
             body: JSON.stringify({
                 _id: noteId,
-                name: text
+                name: text,
+                sum: sumGET
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -143,6 +148,9 @@ function App() {
     const handleChangeText = (e) => {
 
         setText(e.target.value)
+    };
+    const handleChangeSum = (e) => {
+        setSum(e.target.value)
     };
 
     // const getUser = async (userId) => {
@@ -178,8 +186,11 @@ function App() {
                             <h1>Kickstart Your Projects</h1>
                             <h3>You've logged in as {loginData.email} (googleId - {loginData.googleId})</h3>
                             <Dialog open={open} onClose={handleClose}>
-                                <DialogTitle>Edit name</DialogTitle>
+                                <DialogTitle>Edit project</DialogTitle>
+                            
                                 <DialogContent>
+                                    <form>
+
                                     <TextField
                                         onChange={handleChangeText}
                                         autoFocus
@@ -190,6 +201,17 @@ function App() {
                                         fullWidth
                                         variant="standard"
                                     />
+                                    <TextField
+                                        onChange={handleChangeSum}
+                                        autoFocus
+                                        margin="dense"
+                                        id="name"
+                                        label="Enter new sum"
+                                        type="name"
+                                        fullWidth
+                                        variant="standard"
+                                        />
+                                    </form>
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Cancel</Button>

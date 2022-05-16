@@ -5,7 +5,7 @@ const users = client.db().collection('users')
 const projects = client.db().collection('projects')
 const roles = client.db().collection('role_permissions')
 
-const start = async() => {
+const start = async () => {
     try {
         await client.connect()
         console.log('Connected')
@@ -16,51 +16,58 @@ const start = async() => {
 
 const updateUser = async (user) => {
     await users.updateOne(
-        {googleId: user.googleId},
-        {$setOnInsert: {
-            name: user.name, email: user.email, role: user.role
-        }},
-        {upsert: true}
+        { googleId: user.googleId },
+        {
+            $setOnInsert: {
+                name: user.name, email: user.email, role: user.role
+            }
+        },
+        { upsert: true }
     )
 }
 
 const newProject = async (user, name, target) => {
-    await projects.insertOne({author: user, name: name, raised: 0, requested: target})
+    await projects.insertOne({ author: user, name: name, raised: 0, requested: target })
 }
 
-const getAllProjects = async() => {
+const getAllProjects = async () => {
     const res = await projects.find().toArray()
     return res
 }
 
-const getUserProjects = async(userId) => {
-    const res = await projects.find({author: userId}).toArray()
+const getUserProjects = async (userId) => {
+    const res = await projects.find({ author: userId }).toArray()
     return res
 }
 
-const deleteProject = async(_id) => {
-    const res = await projects.deleteOne({_id: ObjectId(_id)})
+const deleteProject = async (_id) => {
+    const res = await projects.deleteOne({ _id: ObjectId(_id) })
     return res
 }
 
-const editProject = async(_id, anotherName) => {
-    console.log(_id, anotherName)
-    const res = await projects.updateOne({_id: ObjectId(_id)}, {$set: {"name": anotherName}})
+const editProject = async (_id, anotherName, anotherSum) => {
+    console.log(_id, anotherName, anotherSum)
+    if (anotherName === "Sample name" && anotherSum != "Sample sum") {
+        const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "requested": anotherSum } })
 
-    console.log(res)
+    }
+    else if (anotherSum === "Sample sum" && anotherName != "Sample name") {
+        const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "name": anotherName, } })
+    }
+
 }
 
-const getUserById = async(id) => {
-    return await users.findOne({googleId: id})
+const getUserById = async (id) => {
+    return await users.findOne({ googleId: id })
 }
 
-const getPermissionsByRole = async(role) => {
-    return await roles.findOne({role: role})
+const getPermissionsByRole = async (role) => {
+    return await roles.findOne({ role: role })
 }
 
-const getUserPermissions = async(userId) => {
-    const user = await users.findOne({googleId: userId})
-    const perms = await roles.findOne({role: user.role})
+const getUserPermissions = async (userId) => {
+    const user = await users.findOne({ googleId: userId })
+    const perms = await roles.findOne({ role: user.role })
     return perms
 }
 
