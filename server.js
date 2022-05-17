@@ -1,6 +1,6 @@
 import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { updateUser, newProject, getAllProjects, getUserProjects, deleteProject, editProject, getUserById, getPermissionsByRole, getUserPermissions } from './mongodb.js'
+import { updateUser, newProject, getAllProjects, getUserProjects, deleteProject, editProject, supportProject, getUserById, getPermissionsByRole, getUserPermissions } from './mongodb.js'
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
@@ -52,11 +52,18 @@ app.post('/api/delete-project', async (req, res) => {
 })
 
 app.post('/api/edit-project', async (req, res) => {
-    
     const { _id, name, sum } = req.body;
-    console.log({ _id, name,sum})
+    console.log({ _id, name, sum })
 
     const edit_note = await editProject(_id, name,sum)
+    res.json(edit_note)
+})
+
+app.post('/api/support-project', async (req, res) => {
+    const { _id, sum } = req.body;
+    console.log({ _id, sum })
+
+    const edit_note = await supportProject(_id, sum)
     res.json(edit_note)
 })
 

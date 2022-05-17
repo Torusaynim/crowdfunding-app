@@ -27,7 +27,7 @@ const updateUser = async (user) => {
 }
 
 const newProject = async (user, name, target) => {
-    await projects.insertOne({ author: user, name: name, raised: 0, requested: target })
+    await projects.insertOne({ author: user, name: name, raised: 0, requested: parseInt(target) })
 }
 
 const getAllProjects = async () => {
@@ -48,13 +48,21 @@ const deleteProject = async (_id) => {
 const editProject = async (_id, anotherName, anotherSum) => {
     console.log(_id, anotherName, anotherSum)
     if (anotherName === "Sample name" && anotherSum != "Sample sum") {
-        const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "requested": anotherSum } })
+        const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "requested": parseInt(anotherSum) } })
 
     }
     else if (anotherSum === "Sample sum" && anotherName != "Sample name") {
         const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "name": anotherName, } })
     }
+    else {
+        const res = await projects.updateOne({ _id: ObjectId(_id) }, { $set: { "name": anotherName, "requested": parseInt(anotherSum) } })
+    }
+}
 
+const supportProject = async (_id, incSum) => {
+    console.log(_id, incSum)
+    const res = await projects.updateOne({ _id: ObjectId(_id) }, { $inc: { "raised": parseInt(incSum) } })
+    console.log(res)
 }
 
 const getUserById = async (id) => {
@@ -74,5 +82,5 @@ const getUserPermissions = async (userId) => {
 start()
 
 export {
-    updateUser, newProject, getAllProjects, getUserProjects, deleteProject, editProject, getUserById, getPermissionsByRole, getUserPermissions
+    updateUser, newProject, getAllProjects, getUserProjects, deleteProject, editProject, supportProject, getUserById, getPermissionsByRole, getUserPermissions
 }

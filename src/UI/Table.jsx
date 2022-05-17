@@ -14,6 +14,12 @@ import Button from '@mui/material/Button';
 
 export default function BasicTable(props) {
 
+    const onProjectSupport = (e) => {
+        e.preventDefault()
+        console.log(e.target.value)
+        props.onProjectSupport(e.target.value);
+    }
+
     const onProjectEdit = (e) => {
         e.preventDefault()
         props.onProjectEdit(e.target.value);
@@ -46,7 +52,7 @@ export default function BasicTable(props) {
                             <TableCell>{row.name}</TableCell>
                             <TableCell>{row.raised} of {row.requested}</TableCell>
                             <TableCell align="right">
-                                <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><MonetizationIcon/>Support</Button>
+                                <Button onClick={onProjectSupport} value={row._id} sx={{marginRight: 2}}><MonetizationIcon/>Support</Button>
                                 <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
                                 <Button onClick={onProjectDelete} value={row._id} variant="text"><DeleteOutlineIcon/>Delete</Button>
                             </TableCell>

@@ -14,24 +14,38 @@ import { GoogleLogin } from '@react-oauth/google';
 
 
 function App() {
-    const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [openSupport, setOpenSupport] = useState(false);
     const [noteId, setNoteId] = useState(null);
     const [text, setText] = useState('Sample name');
-    const [sumGET, setSum] = useState('Sample sum');
+    const [sumGET, setSum] = useState(0);
 
     const [access, setAccess] = useState(false);
 
     const handleEditProject = async (noteId) => {
         console.log('handleEditProject')
         if (noteId) {
-            setOpen(true);
+            setOpenEdit(true);
             setNoteId(noteId);
         }
     };
 
-    const handleClose = () => {
-        console.log('handleClose')
-        setOpen(false);
+    const handleSupportProject = async (noteId) => {
+        console.log('handleSupportProject')
+        if (noteId) {
+            setOpenSupport(true);
+            setNoteId(noteId);
+        }
+    };
+
+    const handleCloseEdit = () => {
+        console.log('handleCloseEdit')
+        setOpenEdit(false);
+    }
+
+    const handleCloseSupport = () => {
+        console.log('handleCloseSupport')
+        setOpenSupport(false);
     }
 
     const [loginData, setLoginData] = useState(
@@ -44,10 +58,10 @@ function App() {
         false
     )
 
-    const handleFailure = (result) => {
-        console.log(window.location.href);
-        console.log(result);
-    };
+    // const handleFailure = (result) => {
+    //     console.log(window.location.href);
+    //     console.log(result);
+    // };
 
     const handleLogin = async (googleData) => {
         console.log(googleData);
@@ -141,7 +155,24 @@ function App() {
             }
         })
 
-        setOpen(false)
+        setOpenEdit(false)
+        await handleGetUserProjects(loginData.googleId)
+    };
+
+    const handleSupport = async () => {
+     
+        await fetch('/api/support-project', {
+            method: 'POST',
+            body: JSON.stringify({
+                _id: noteId,
+                sum: sumGET
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+
+        setOpenSupport(false)
         await handleGetUserProjects(loginData.googleId)
     };
 
@@ -185,7 +216,7 @@ function App() {
                         <div>
                             <h1>Kickstart Your Projects</h1>
                             <h3>You've logged in as {loginData.email} (googleId - {loginData.googleId})</h3>
-                            <Dialog open={open} onClose={handleClose}>
+                            <Dialog open={openEdit} onClose={handleCloseEdit}>
                                 <DialogTitle>Edit project</DialogTitle>
                             
                                 <DialogContent>
@@ -207,26 +238,50 @@ function App() {
                                         margin="dense"
                                         id="name"
                                         label="Enter new sum"
-                                        type="name"
+                                        type="number"
                                         fullWidth
                                         variant="standard"
                                         />
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button onClick={handleCloseEdit}>Cancel</Button>
                                     <Button onClick={handleEdit}>Edit</Button>
+                                </DialogActions>
+                            </Dialog>
+
+                            <Dialog open={openSupport} onClose={handleCloseSupport}>
+                                <DialogTitle>Support project</DialogTitle>
+                            
+                                <DialogContent>
+                                    <form>
+
+                                    <TextField
+                                        onChange={handleChangeSum}
+                                        autoFocus
+                                        margin="dense"
+                                        id="name"
+                                        label="Enter amount of support"
+                                        type="number"
+                                        fullWidth
+                                        variant="standard"
+                                        />
+                                    </form>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleCloseSupport}>Cancel</Button>
+                                    <Button onClick={handleSupport}>Support</Button>
                                 </DialogActions>
                             </Dialog>
                             <Input onNewNote={handleNewProject} />
                             <Button variant="outlined" onClick={handleGetAllProjects}>Browse All Projects</Button>
                             {/* {hasUserAccess('view_all') &&
-                        <Button disabled={!access} variant="outlined" onClick={handleGetAllProjects}>Get all notes</Button>
-                    } */}
+                                <Button disabled={!access} variant="outlined" onClick={handleGetAllProjects}>Get all notes</Button>
+                            } */}
                             <Button variant="outlined" onClick={handleGetUserProjects}>My Projects</Button>
                             {projectsList ? (
                                 <div>
-                                    <Table data={projectsList} onProjectEdit={handleEditProject} onProjectDelete={handleDelete} />
+                                    <Table data={projectsList} onProjectSupport={handleSupportProject} onProjectEdit={handleEditProject} onProjectDelete={handleDelete} />
                                 </div>
                             ) : (
                                 <div></div>
