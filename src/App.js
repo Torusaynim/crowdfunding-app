@@ -32,6 +32,7 @@ function App() {
 
     const handleSupportProject = async (noteId) => {
         console.log('handleSupportProject')
+        console.log(access)
         if (noteId) {
             setOpenSupport(true);
             setNoteId(noteId);
@@ -281,7 +282,9 @@ function App() {
                             <Button variant="outlined" onClick={handleGetUserProjects}>My Projects</Button>
                             {projectsList ? (
                                 <div>
-                                    <Table data={projectsList} onProjectSupport={handleSupportProject} onProjectEdit={handleEditProject} onProjectDelete={handleDelete} />
+                                {hasUserAccess('view_all') &&
+                                    <Table data={projectsList} currentUser={loginData.googleId} access={access} onProjectSupport={handleSupportProject} onProjectEdit={handleEditProject} onProjectDelete={handleDelete} />
+                                }
                                 </div>
                             ) : (
                                 <div></div>

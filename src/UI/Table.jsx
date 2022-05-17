@@ -53,8 +53,17 @@ export default function BasicTable(props) {
                             <TableCell>{row.raised} of {row.requested}</TableCell>
                             <TableCell align="right">
                                 <Button onClick={onProjectSupport} value={row._id} sx={{marginRight: 2}}><MonetizationIcon/>Support</Button>
-                                <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
-                                <Button onClick={onProjectDelete} value={row._id} variant="text"><DeleteOutlineIcon/>Delete</Button>
+                                {props.access || props.currentUser===row.author ? (
+                                    <>
+                                        <Button onClick={onProjectEdit} value={row._id} sx={{marginRight: 2}}><EditIcon/>Edit</Button>
+                                        <Button onClick={onProjectDelete} value={row._id} variant="text"><DeleteOutlineIcon/>Delete</Button>
+                                    </>
+                                ) : (
+                                    <>
+                                    
+                                    </>
+                                )
+                                }
                             </TableCell>
                         </TableRow>
                     ))}
