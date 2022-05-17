@@ -1,9 +1,10 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
-const client = new MongoClient("mongodb://localhost:27017/rbac")
-const users = client.db().collection('users')
-const projects = client.db().collection('projects')
-const roles = client.db().collection('role_permissions')
+const client = new MongoClient("mongodb://localhost:27017")
+const database = client.db('rbac')
+const users = database.collection('users')
+const projects = database.collection('projects')
+const roles = database.collection('role_permissions')
 
 const start = async () => {
     try {
