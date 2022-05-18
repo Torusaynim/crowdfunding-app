@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
-const client = new MongoClient("mongodb://localhost:27017")
+// const client = new MongoClient("mongodb://localhost:27017")
+const client = new MongoClient("mongodb+srv://Administrator:iamlordofnowhere@rksp.izpwk.mongodb.net/?retryWrites=true&w=majority")
 const database = client.db('rbac')
 const users = database.collection('users')
 const projects = database.collection('projects')
