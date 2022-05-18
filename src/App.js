@@ -22,6 +22,8 @@ function App() {
 
     const [access, setAccess] = useState(false);
 
+    const backUri = 'https://torusaynim-fund-app.herokuapp.com';
+
     const handleEditProject = async (noteId) => {
         console.log('handleEditProject')
         if (noteId) {
@@ -67,7 +69,7 @@ function App() {
     const handleLogin = async (googleData) => {
         console.log(googleData);
 
-        const res = await fetch('/api/google-login', {
+        const res = await fetch(backUri+'/api/google-login', {
             method: 'POST',
             body: JSON.stringify({
                 token: googleData.credential,
@@ -91,7 +93,7 @@ function App() {
 
     const handleGetAllProjects = async () => {
         // if (!projectsList) {
-        const res = await fetch('/api/get-all-projects')
+        const res = await fetch(backUri+'/api/get-all-projects')
         const result = await res.json().then(data => { return data })
         toggleProjects(result)
         // } else {
@@ -101,7 +103,7 @@ function App() {
 
     const handleGetUserProjects = async () => {
         // if (!projectsList) {
-        const res = await fetch('/api/get-user-projects/' + loginData.googleId)
+        const res = await fetch(backUri+'/api/get-user-projects/' + loginData.googleId)
         const result = await res.json().then(data => { return data })
         toggleProjects(result)
         // } else {
@@ -113,7 +115,7 @@ function App() {
         console.log('handleNewProject')
     
         console.log(sum);
-        await fetch('/api/new-project', {
+        await fetch(backUri+'/api/new-project', {
             method: 'POST',
             body: JSON.stringify({
                 user: loginData.googleId,
@@ -130,7 +132,7 @@ function App() {
 
     const handleDelete = async (noteId) => {
         console.log('handleDelete')
-        await fetch('/api/delete-project', {
+        await fetch(backUri+'/api/delete-project', {
             method: 'POST',
             body: JSON.stringify({
                 _id: noteId
@@ -144,7 +146,7 @@ function App() {
 
     const handleEdit = async () => {
      
-        await fetch('/api/edit-project', {
+        await fetch(backUri+'/api/edit-project', {
             method: 'POST',
             body: JSON.stringify({
                 _id: noteId,
@@ -162,7 +164,7 @@ function App() {
 
     const handleSupport = async () => {
      
-        await fetch('/api/support-project', {
+        await fetch(backUri+'/api/support-project', {
             method: 'POST',
             body: JSON.stringify({
                 _id: noteId,
@@ -186,21 +188,21 @@ function App() {
     };
 
     // const getUser = async (userId) => {
-    //     const user_res = await fetch('/api/get-user/' + userId)
+    //     const user_res = await fetch(backUri+'/api/get-user/' + userId)
     //     const result = await user_res.json().then(data => {return data})
     //     console.log(result)
     //     return result
     // }
     //
     // const getPermissions = async (role) => {
-    //     const res = await fetch('/api/get-permissions/'+role)
+    //     const res = await fetch(backUri+'/api/get-permissions/'+role)
     //     const result = await res.json().then(data => {return data})
     //     console.log(result)
     //     return result
     // }
 
     const hasUserAccess = async (perm) => {
-        const res = await fetch('/api/get-user-permissions/' + loginData.googleId)
+        const res = await fetch(backUri+'/api/get-user-permissions/' + loginData.googleId)
         const result = await res.json()
         setPermission(result.permissions.some(e => e === perm))
     }
