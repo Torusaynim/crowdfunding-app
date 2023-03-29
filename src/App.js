@@ -22,7 +22,7 @@ function App() {
 
     const [access, setAccess] = useState(false);
 
-    const backUri = 'https://torusaynim-fund-app.herokuapp.com';
+    const backUri = 'http://127.0.0.1:5000';
 
     const handleEditProject = async (noteId) => {
         console.log('handleEditProject')
